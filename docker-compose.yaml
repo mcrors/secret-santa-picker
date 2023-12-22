@@ -1,0 +1,13 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=secret_santa_user
+      - POSTGRES_PASSWORD=secret_santa_password
+      - POSTGRES_DB=secret_santa_db  # Explicitly specify the database name
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'

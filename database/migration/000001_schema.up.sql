@@ -1,0 +1,2 @@
+CREATE SCHEMA IF NOT EXISTS secret_santa;
+
