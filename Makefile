@@ -10,7 +10,13 @@ ifeq ($(ENV),prod)
 DATABASE_URL := postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST_PROD}:5432/${DATABASE_NAME}?sslmode=disable
 endif
 
-.PHONY: migration_up migration_down migration_fix
+.PHONY: build migration_up migration_down migration_fix
+
+build:
+	go build -o bin/secret-santa cmd/main.go
+
+run: build
+	./bin/secret-santa
 
 migration_up:
 	@echo ${DATABASE_URL}
@@ -22,3 +28,4 @@ migration_down:
 
 migration_fix:
 	migrate -path database/migration/ -database ${DATABASE_URL} force $(VERSION)
+

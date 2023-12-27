@@ -13,15 +13,21 @@ var defaultConfig []byte
 
 // Root configuration for the main application.
 type Config struct {
-	App AppConfig `mapstructure:"app"`
+	App  App  `mapstructure:"app"`
+	Http HTTP `mapstructure:"http"`
 }
 
 func (p Config) Defaults() io.Reader {
 	return bytes.NewReader(defaultConfig)
 }
 
-type AppConfig struct {
+type App struct {
 	LogLevel string `mapstructure:"log_level"`
+}
+
+type HTTP struct {
+	Port int32  `mapstructure:"port"`
+	Host string `mapstructure:"host"`
 }
 
 func LoadConfig(config *Config) error {

@@ -1,14 +1,12 @@
-// main is the entry point into the application
 package main
 
 import (
-	_ "embed"
 	"log"
 	"log/slog"
 	"os"
 
-	"github.com/mcrors/secret-santa-picker-server/internal/config"
-	domain "github.com/mcrors/secret-santa-picker-server/internal/domain"
+	"github.com/mcrors/secret-santa-picker-server/config"
+	"github.com/mcrors/secret-santa-picker-server/server"
 )
 
 func main() {
@@ -25,14 +23,14 @@ func main() {
 	// Create handlers
 	// Create Server
 
-	u := domain.User{
-		FirstName: "Rory",
-		LastName:  "Houlihan",
-		Email:     "rory@houli.eu",
+	s, err := server.NewServer(cfg.Http)
+	if err != nil {
+		log.Fatalf("error creating server: %v", err)
 	}
 
-	slog.Debug("this is a debug message")
-	slog.Info("current user", slog.Any("user", u))
+	if err := s.ListenAndServe(); err != nil {
+		log.Fatalf("error running server: %v", err)
+	}
 }
 
 func setupLogger(cfg config.Config) {

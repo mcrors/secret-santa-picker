@@ -1,0 +1,6 @@
+app:
+  log_level: "DEBUG"
+
+http:
+  port: 8080
+  host: localhost
