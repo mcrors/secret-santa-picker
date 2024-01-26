@@ -4,3 +4,12 @@ app:
 http:
   port: 8080
   host: localhost
+
+database:
+  name: secret_santa_db
+  host: localhost
+  port: 5432
+  username: secret_santa_user
+  password: secret_santa_password
+  sslmode: disable
+
