@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     image: postgres:latest
-    restart: always
+    restart: on-failure
     environment:
       - POSTGRES_USER=secret_santa_user
       - POSTGRES_PASSWORD=secret_santa_password

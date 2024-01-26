@@ -8,16 +8,22 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/mcrors/secret-santa-picker-server/config"
-	"github.com/mcrors/secret-santa-picker-server/handlers"
+	"github.com/mcrors/secret-santa-picker-server/handler"
+	"github.com/mcrors/secret-santa-picker-server/middleware"
 	"github.com/mcrors/secret-santa-picker-server/views"
 )
 
 type Server struct {
-	e    *echo.Echo
-	port string
+	e               *echo.Echo
+	port            string
+	protectedRoutes *echo.Group
+	registerHandler *handler.Register
 }
 
-func NewServer(cfg config.HTTP) (*Server, error) {
+func NewServer(
+	cfg config.HTTP,
+	registerHandler *handler.Register,
+) (*Server, error) {
 	slog.Info("Creating server")
 
 	port := fmt.Sprintf(":%s", strconv.Itoa(int(cfg.Port)))
@@ -25,8 +31,9 @@ func NewServer(cfg config.HTTP) (*Server, error) {
 	e := echo.New()
 
 	s := &Server{
-		e:    e,
-		port: port,
+		e:               e,
+		port:            port,
+		registerHandler: registerHandler,
 	}
 
 	err := s.setRenderers()
@@ -34,7 +41,6 @@ func NewServer(cfg config.HTTP) (*Server, error) {
 		return nil, err
 	}
 
-	s.setMiddlewares()
 	s.configureEcho(cfg)
 	s.mountHandlers()
 
@@ -50,7 +56,9 @@ func (s *Server) setRenderers() error {
 	return nil
 }
 
-func (s *Server) setMiddlewares() {}
+func (s *Server) setMiddlewares() {
+	s.protectedRoutes.Use(middleware.Authenticate())
+}
 
 func (s *Server) configureEcho(cfg config.HTTP) {
 	slog.Info("Configuring echo")
@@ -64,6 +72,11 @@ func (s *Server) ListenAndServe() error {
 
 func (s *Server) mountHandlers() {
 	slog.Info("Mounting handlers")
-	s.e.GET("/", handlers.GetIndex)
-	s.e.GET("/home", handlers.GetHome)
+	s.e.GET("/login", handler.GetLogin)
+	s.e.GET("/register", s.registerHandler.GetRegister)
+	s.e.POST("/register", s.registerHandler.PostRegister)
+
+	s.e.GET("/", handler.GetIndex, middleware.Authenticate())
+	s.e.GET("/home", handler.GetHome, middleware.Authenticate())
+
 }
