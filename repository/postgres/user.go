@@ -29,19 +29,20 @@ func (u *User) List() ([]domain.User, error) {
 	return []domain.User{}, nil
 }
 
-func (u *User) Add(user domain.User) error {
+func (u *User) Add(user domain.User) (int, error) {
 	query := `
 		INSERT INTO ` + u.schema + `.` + u.tableName + `
 		(uuid, first_name, last_name, email, password)
 		VALUES ($1, $2, $3, $4, $5)
-		RETURNING id, uuid, created_at, updated_at
+		RETURNING id
 	`
-	_, err := u.db.Exec(query, user.UUID, user.FirstName, user.LastName, user.Email, user.PasswordHash)
+	var id int
+	err := u.db.QueryRow(query, user.UUID, user.FirstName, user.LastName, user.Email, user.PasswordHash).Scan(&id)
 	if err != nil {
-		return fmt.Errorf("error adding user to repository: %w", err)
+		return 0, fmt.Errorf("error adding user to repository: %w", err)
 	}
 
-	return nil
+	return id, nil
 }
 
 func (u *User) Delete() (domain.User, error) {

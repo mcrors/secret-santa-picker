@@ -16,12 +16,20 @@ const (
 
 var postgresDB *sql.DB
 
-func GetPostgresDB(cfg config.Config) (*sql.DB, error) {
+func GetPostgresDB(dbConfig config.Database) (*sql.DB, error) {
 	if postgresDB != nil {
 		return postgresDB, nil
 	}
 
-	dataSourceName := fmt.Sprintf(connStr, cfg.DB.Username, cfg.DB.Password, cfg.DB.Host, cfg.DB.Port, cfg.DB.Name, cfg.DB.SSLMode)
+	dataSourceName := fmt.Sprintf(
+		connStr,
+		dbConfig.Username,
+		dbConfig.Password,
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.Name,
+		dbConfig.SSLMode,
+	)
 	db, err := sql.Open(postgresDriver, dataSourceName)
 	if err != nil {
 		return nil, fmt.Errorf("error creating postgres db: %w", err)

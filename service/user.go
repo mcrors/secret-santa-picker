@@ -10,7 +10,7 @@ import (
 type UserRepositoy interface {
 	Get() (domain.User, error)
 	List() ([]domain.User, error)
-	Add(user domain.User) error
+	Add(user domain.User) (int, error)
 	Delete() (domain.User, error)
 	Update(user domain.User) (domain.User, error)
 }
@@ -38,7 +38,7 @@ func (s *User) Post(u domain.User) (string, error) {
 	uuid := uuid.New()
 	u.UUID = &uuid
 
-	err = s.repo.Add(u)
+	_, err = s.repo.Add(u)
 	if err != nil {
 		return "", fmt.Errorf("error posting from the user service: %w", err)
 	}
