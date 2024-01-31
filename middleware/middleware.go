@@ -14,13 +14,13 @@ func Authenticate() echo.MiddlewareFunc {
 			r := c.Request().Clone(c.Request().Context())
 			tokenString, err := iam.GetTokenFromCookie(r)
 			if err != nil {
-				slog.Info("could not extract token, redirecting to login: %s", err.Error())
+				slog.Info("could not extract token, redirecting to login: %s", "error", err.Error())
 				return c.Redirect(http.StatusSeeOther, "/login")
 			}
 
 			claims, err := iam.VerifyToken(tokenString.Value)
 			if err != nil {
-				slog.Info("could not verify token, redirecting to login: %s", err.Error())
+				slog.Info("could not verify token, redirecting to login: %s", "error", err.Error())
 				return c.Redirect(http.StatusSeeOther, "/login")
 			}
 

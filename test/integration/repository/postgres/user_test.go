@@ -1,20 +1,15 @@
 package postgres_test
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 	"os"
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/mcrors/secret-santa-picker-server/config"
 	"github.com/mcrors/secret-santa-picker-server/database"
 	"github.com/mcrors/secret-santa-picker-server/domain"
 	pg_repo "github.com/mcrors/secret-santa-picker-server/repository/postgres"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 
 	"github.com/ory/dockertest/v3"
@@ -22,7 +17,6 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	fmt.Println("Starting tests")
 	cfg := testConfig()
 	pool, err := dockertest.NewPool("")
 	if err != nil {
@@ -109,33 +103,5 @@ func TestAddUserToRepository(t *testing.T) {
 	}
 	if id != 1 {
 		t.Fatalf("expected id to be 1, got %d", id)
-	}
-}
-
-func dbMigration(db *sql.DB) (*migrate.Migrate, error) {
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
-	if err != nil {
-		return nil, err
-	}
-	return migrate.NewWithDatabaseInstance("file://../../../../database/migration", "postgres", driver)
-}
-
-func testConfig() config.Config {
-	return config.Config{
-		App: config.App{
-			LogLevel: "DEBUG",
-		},
-		Http: config.HTTP{
-			Port: 8080,
-			Host: "localhost",
-		},
-		DB: config.Database{
-			Host:     "localhost",
-			Port:     5432,
-			Username: "secret_santa_user",
-			Password: "secret_santa_password",
-			Name:     "secret_santa_db",
-			SSLMode:  "disable",
-		},
 	}
 }
