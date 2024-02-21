@@ -1,6 +1,11 @@
 package config
 
-import "testing"
+import (
+	"io/ioutil"
+	"log"
+	"os"
+	"testing"
+)
 
 func TestLoadDefaultConfig(t *testing.T) {
 	var config Config
@@ -39,5 +44,30 @@ func TestLoadDefaultConfig(t *testing.T) {
 
 	if config.DB.SSLMode != "disable" {
 		t.Errorf("SSL mode is not disable")
+	}
+}
+
+func TestOverrideDefaultConfig(t *testing.T) {
+	// Create a temp file
+	cleanup := createConfigfile()
+	defer cleanup()
+
+	var config Config
+	err := LoadConfig(&config)
+	if err != nil {
+		t.Errorf("Error loading config: %s", err)
+	}
+}
+
+func createConfigfile() func() {
+	// Create a temp file
+	f, err := ioutil.TempFile("", "config")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// return a function to clean up the file
+	return func() {
+		os.Remove(f.Name())
 	}
 }
