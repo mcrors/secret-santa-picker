@@ -58,8 +58,7 @@ func LoadConfig(config *Config) error {
 
 	// This requires an environment variable called APP_CONFIG_PATH. This will point to
 	// another config file which will override the default config values
-	configPath := viper.GetString("CONFIG_PATH")
-	fmt.Println("Config Path:", configPath)
+	configPath := viper.GetString("CONFIG_FILE")
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile(configPath)
 

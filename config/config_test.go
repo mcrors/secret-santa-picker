@@ -1,8 +1,7 @@
 package config
 
 import (
-	"io/ioutil"
-	"log"
+	"fmt"
 	"os"
 	"testing"
 )
@@ -49,25 +48,42 @@ func TestLoadDefaultConfig(t *testing.T) {
 
 func TestOverrideDefaultConfig(t *testing.T) {
 	// Create a temp file
-	cleanup := createConfigfile()
+	configFilePattern := "config_test_*.yaml"
+	fileName, cleanup, err := createConfigfile(configFilePattern)
+	if err != nil {
+		t.Errorf("Error creating temp file: %s", err)
+	}
 	defer cleanup()
 
+	os.Setenv("SECRET_SANTA_CONFIG_FILE", fileName)
+
 	var config Config
-	err := LoadConfig(&config)
+	err = LoadConfig(&config)
 	if err != nil {
 		t.Errorf("Error loading config: %s", err)
 	}
+
+	fmt.Println(config.App.LogLevel)
+	if config.App.LogLevel != "INFO" {
+		t.Errorf("Expected log level to be INFO, got %s", config.App.LogLevel)
+	}
 }
 
-func createConfigfile() func() {
+func createConfigfile(filename string) (string, func(), error) {
 	// Create a temp file
-	f, err := ioutil.TempFile("", "config")
+	f, err := os.CreateTemp("", filename)
 	if err != nil {
-		log.Fatal(err)
+		return "", nil, err
+	}
+	defer f.Close()
+
+	// Write to the file
+	_, err = f.WriteString("app:\n  log_level: INFO")
+	if err != nil {
+		return "", nil, err
 	}
 
+	name := f.Name()
 	// return a function to clean up the file
-	return func() {
-		os.Remove(f.Name())
-	}
+	return name, func() { os.Remove(name) }, nil
 }
