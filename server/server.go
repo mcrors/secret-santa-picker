@@ -10,6 +10,7 @@ import (
 	"github.com/mcrors/secret-santa-picker-server/config"
 	"github.com/mcrors/secret-santa-picker-server/handler"
 	"github.com/mcrors/secret-santa-picker-server/middleware"
+	"github.com/mcrors/secret-santa-picker-server/static"
 	"github.com/mcrors/secret-santa-picker-server/views"
 )
 
@@ -43,6 +44,7 @@ func NewServer(
 
 	s.configureEcho(cfg)
 	s.mountHandlers()
+	s.serveStaticContent()
 
 	return s, nil
 }
@@ -78,5 +80,9 @@ func (s *Server) mountHandlers() {
 
 	s.e.GET("/", handler.GetIndex, middleware.Authenticate())
 	s.e.GET("/home", handler.GetHome, middleware.Authenticate())
+}
 
+func (s *Server) serveStaticContent() {
+	content := static.Content()
+	s.e.StaticFS("/static", content)
 }

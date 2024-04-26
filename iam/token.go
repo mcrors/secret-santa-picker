@@ -20,6 +20,7 @@ type Claims struct {
 }
 
 func GenerateToken(username string) (string, error) {
+	// TODO: make this configurable
 	expirationTime := time.Now().Add(24 * time.Hour) // Token expires in 24 hours
 
 	claims := &Claims{
@@ -43,7 +44,6 @@ func VerifyToken(tokenString string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

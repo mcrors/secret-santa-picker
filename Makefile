@@ -13,19 +13,19 @@ endif
 .PHONY: build migration_up migration_down migration_fix
 
 build:
-	go build -o bin/secret-santa cmd/main.go
+	@go build -o bin/secret-santa cmd/main.go
 
 run: build
-	./bin/secret-santa
+	@./bin/secret-santa
 
 migration_up:
 	@echo ${DATABASE_URL}
-	migrate -path database/migration/ -database ${DATABASE_URL} -verbose up
+	@migrate -path database/migration/ -database ${DATABASE_URL} -verbose up
 
 migration_down:
 	@echo ${DATABASE_URL}
-	migrate -path database/migration/ -database ${DATABASE_URL} -verbose down $(BACK)
+	@migrate -path database/migration/ -database ${DATABASE_URL} -verbose down $(BACK)
 
 migration_fix:
-	migrate -path database/migration/ -database ${DATABASE_URL} force $(VERSION)
+	@migrate -path database/migration/ -database ${DATABASE_URL} force $(VERSION)
 
