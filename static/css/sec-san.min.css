@@ -208,6 +208,9 @@ select{
     padding:0;
     border-style:none
 }
+.custom-red-btn{
+    color: #FF3352
+}
 input[type=checkbox],input[type=radio]{
     box-sizing:border-box;
     padding:0
@@ -2080,8 +2083,10 @@ a.btn.disabled,fieldset:disabled a.btn{
 }
 .btn-danger{
     color:#fff;
-    background-color:#e74a3b;
-    border-color:#e74a3b
+    background-color: ##FF3352
+    border-color: ##FF3352
+    /* background-color:#e74a3b; */
+    /* border-color:#e74a3b */
 }
 .btn-danger:hover{
     color:#fff;
@@ -8763,12 +8768,12 @@ a:focus{
     }
 }
 .bg-login-image{
-    background:url(https://source.unsplash.com/K4mSJ7kc0As/600x800);
+    background:url(/static/images/login.webp);
     background-position:center;
     background-size:cover
 }
 .bg-register-image{
-    background:url(https://source.unsplash.com/Mv9hjnEUHR4/600x800);
+    background:url(/static/images/register.webp);
     background-position:center;
     background-size:cover
 }
