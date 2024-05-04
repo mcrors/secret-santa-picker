@@ -78,6 +78,7 @@ func TestAddUserToRepository(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error creating postgres db: %v", err)
 	}
+	defer db.Close()
 
 	m, err := dbMigration(db)
 	if err != nil {
