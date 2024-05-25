@@ -29,6 +29,23 @@ func (u *User) List() ([]domain.User, error) {
 	return []domain.User{}, nil
 }
 
+func (u *User) Exists(email string) (bool, error) {
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM ` + u.schema + `.` + u.tableName + `
+			WHERE email = $1
+		)
+	`
+	var exists bool
+	err := u.db.QueryRow(query, email).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("error checking if user exists in repository: %w", err)
+	}
+
+	return exists, nil
+}
+
 func (u *User) Add(user domain.User) (int, error) {
 	query := `
 		INSERT INTO ` + u.schema + `.` + u.tableName + `
@@ -36,8 +53,16 @@ func (u *User) Add(user domain.User) (int, error) {
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id
 	`
+
 	var id int
-	err := u.db.QueryRow(query, user.UUID, user.FirstName, user.LastName, user.Email, user.PasswordHash).Scan(&id)
+	err := u.db.QueryRow(
+		query,
+		user.UUID,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.PasswordHash,
+	).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("error adding user to repository: %w", err)
 	}

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log/slog"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -30,6 +31,7 @@ func (s *User) Get() (domain.User, error) {
 }
 
 func (s *User) Post(u domain.User) (string, error) {
+	slog.Info("Posting user")
 	err := u.Validate()
 	if err != nil {
 		return "", fmt.Errorf("error validating user: %w", err)

@@ -62,7 +62,7 @@ func (s *Server) setMiddlewares() {
 	s.protectedRoutes.Use(middleware.Authenticate())
 }
 
-func (s *Server) configureEcho(cfg config.HTTP) {
+func (s *Server) configureEcho(_ config.HTTP) {
 	slog.Info("Configuring echo")
 	s.e.HideBanner = true
 }
