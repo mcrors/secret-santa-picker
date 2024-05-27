@@ -3,8 +3,15 @@
 3. Create a login handler
 
 ## Create New User
-- add user details to form
-- post user details to /register endpoint
--
+
+### Last Update
+* Am able to create a user from the register page
+
+### Next Steps
+* Add validation for the user creation form
+* Add appropriate logging
+* Add an error page
+* Switch to templ
+* Use htmx to swap out non base html
 
 
