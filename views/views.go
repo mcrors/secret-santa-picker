@@ -32,6 +32,7 @@ func (t *TemplateManager) Render(
 	data interface{},
 	c echo.Context,
 ) error {
+	// TODO: fix this up, it doesn't look right
 	slog.Info("Rendering template: " + name)
 	tmpl := template.Must(t.templates.Clone())
 	tmpl = template.Must(tmpl.ParseFS(tmplFS, "templates/"+name))
