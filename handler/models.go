@@ -27,3 +27,8 @@ type UserDeleteRequestData struct {
 
 type UserPatchRequestData struct {
 }
+
+type LoginPostRequestData struct {
+	Email    string `form:"email" json:"email" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}

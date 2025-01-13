@@ -10,6 +10,7 @@ import (
 
 type UserRepositoy interface {
 	Get() (domain.User, error)
+	GetByEmail(email string) (*domain.User, error)
 	List() ([]domain.User, error)
 	Add(user domain.User) (int, error)
 	Delete() (domain.User, error)
@@ -54,4 +55,15 @@ func (s *User) Delete() (domain.User, error) {
 
 func (s *User) Patch(u domain.User) (domain.User, error) {
 	return s.repo.Update(u)
+}
+
+func (s *User) Exists(email string) bool {
+	u, err := s.repo.GetByEmail(email)
+	if err != nil {
+		return false
+	}
+	if u == nil {
+		return false
+	}
+	return true
 }

@@ -5,12 +5,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mcrors/secret-santa-picker-server/domain"
 )
-
-type UserService interface {
-	Post(u domain.User) (string, error)
-}
 
 type Register struct {
 	userService UserService
