@@ -1,4 +1,4 @@
-// The server package is concerned with creating a http server and exposing a ListenAndServe function
+// Package server is concerned with creating a http server and exposing a ListenAndServe function
 package server
 
 import (
@@ -8,8 +8,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/mcrors/secret-santa-picker-server/config"
-	"github.com/mcrors/secret-santa-picker-server/handler"
-	"github.com/mcrors/secret-santa-picker-server/middleware"
 	"github.com/mcrors/secret-santa-picker-server/static"
 	"github.com/mcrors/secret-santa-picker-server/views"
 )
@@ -18,12 +16,10 @@ type Server struct {
 	e               *echo.Echo
 	port            string
 	protectedRoutes *echo.Group
-	registerHandler *handler.Register
 }
 
 func NewServer(
 	cfg config.HTTP,
-	registerHandler *handler.Register,
 ) (*Server, error) {
 	slog.Info("Creating server")
 
@@ -32,9 +28,8 @@ func NewServer(
 	e := echo.New()
 
 	s := &Server{
-		e:               e,
-		port:            port,
-		registerHandler: registerHandler,
+		e:    e,
+		port: port,
 	}
 
 	err := s.setRenderers()
@@ -58,10 +53,6 @@ func (s *Server) setRenderers() error {
 	return nil
 }
 
-func (s *Server) setMiddlewares() {
-	s.protectedRoutes.Use(middleware.Authenticate())
-}
-
 func (s *Server) configureEcho(_ config.HTTP) {
 	slog.Info("Configuring echo")
 	s.e.HideBanner = true
@@ -74,12 +65,6 @@ func (s *Server) ListenAndServe() error {
 
 func (s *Server) mountHandlers() {
 	slog.Info("Mounting handlers")
-	s.e.GET("/login", handler.GetLogin)
-	s.e.GET("/register", s.registerHandler.GetRegister)
-	s.e.POST("/register", s.registerHandler.PostRegister)
-
-	s.e.GET("/", handler.GetIndex, middleware.Authenticate())
-	s.e.GET("/home", handler.GetHome, middleware.Authenticate())
 }
 
 func (s *Server) serveStaticContent() {

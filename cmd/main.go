@@ -7,10 +7,7 @@ import (
 
 	"github.com/mcrors/secret-santa-picker-server/config"
 	"github.com/mcrors/secret-santa-picker-server/database"
-	"github.com/mcrors/secret-santa-picker-server/handler"
-	"github.com/mcrors/secret-santa-picker-server/repository/postgres"
 	"github.com/mcrors/secret-santa-picker-server/server"
-	"github.com/mcrors/secret-santa-picker-server/service"
 )
 
 func main() {
@@ -29,18 +26,14 @@ func main() {
 	defer db.Close()
 
 	// Create repository objects
-	userRepo := postgres.NewUser(db)
 
 	// Create services
-	userService := service.NewUser(userRepo)
 
 	// Create handlers
-	regHandler := handler.NewRegister(userService)
 
 	// Create Server
 	s, err := server.NewServer(
-		cfg.Http,
-		regHandler,
+		cfg.HTTP,
 	)
 	if err != nil {
 		log.Fatalf("error creating server: %v", err)

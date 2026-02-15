@@ -1,3 +1,4 @@
+// Package config handles setting up the application configuration
 package config
 
 import (
@@ -18,10 +19,10 @@ const (
 	EnvPrefix = "SECRET_SANTA"
 )
 
-// Root configuration for the main application.
+// Config stores the root configuration for the main application.
 type Config struct {
 	App  App      `mapstructure:"app"`
-	Http HTTP     `mapstructure:"http"`
+	HTTP HTTP     `mapstructure:"http"`
 	DB   Database `mapstructure:"database"`
 }
 
@@ -75,8 +76,8 @@ func LoadConfig(config *Config) error {
 	return nil
 }
 
-func loadDefaultConfig(config interface{}, defaults io.Reader) error {
-	cfgMap := make(map[string]interface{})
+func loadDefaultConfig(config any, defaults io.Reader) error {
+	cfgMap := make(map[string]any)
 	if err := mapstructure.Decode(config, &cfgMap); err != nil {
 		return err
 	}

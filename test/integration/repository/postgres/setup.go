@@ -14,7 +14,7 @@ func testConfig() config.Config {
 		App: config.App{
 			LogLevel: "DEBUG",
 		},
-		Http: config.HTTP{
+		HTTP: config.HTTP{
 			Port: 8080,
 			Host: "localhost",
 		},

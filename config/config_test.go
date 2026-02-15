@@ -17,11 +17,11 @@ func TestLoadDefaultConfig(t *testing.T) {
 		t.Errorf("Log level is not DEBUG")
 	}
 
-	if config.Http.Port != 8080 {
+	if config.HTTP.Port != 8080 {
 		t.Errorf("Port is not 8080")
 	}
 
-	if config.Http.Host != "localhost" {
+	if config.HTTP.Host != "localhost" {
 		t.Errorf("Host is not localhost")
 	}
 
