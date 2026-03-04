@@ -36,4 +36,4 @@ test:
 
 # Run only unit tests (requires Label("unit") in specs)
 test-unit:
-	@ENV=test $(GINKGO) -r --label-filter="unit" --race --cover --fail-fast
+	@ENV=test $(GINKGO) -r --label-filter="unit" --race --cover --fail-fast -v

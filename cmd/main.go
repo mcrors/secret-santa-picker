@@ -7,6 +7,7 @@ import (
 
 	"github.com/mcrors/secret-santa-picker-server/config"
 	"github.com/mcrors/secret-santa-picker-server/database"
+	"github.com/mcrors/secret-santa-picker-server/repository"
 	"github.com/mcrors/secret-santa-picker-server/server"
 )
 
@@ -26,6 +27,7 @@ func main() {
 	defer db.Close()
 
 	// Create repository objects
+	_ = repository.NewGroupRepository(db)
 
 	// Create services
 

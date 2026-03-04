@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/lib/pq"
 	"github.com/mcrors/secret-santa-picker-server/domain"
 )
 
@@ -30,7 +31,7 @@ func (g *Groups) ListGroups(ctx context.Context) ([]domain.Group, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var results []domain.Group
+	results := make([]domain.Group, 0)
 	for rows.Next() {
 		record, err := scanGroup(rows)
 		if err != nil {
@@ -60,6 +61,10 @@ func (g *Groups) GetGroup(ctx context.Context, id domain.ID) (domain.Group, erro
 func (g *Groups) CreateGroup(ctx context.Context, group domain.Group) (domain.Group, error) {
 	row := g.db.QueryRowContext(ctx, groupInsertReturning, group.ID, group.Name)
 	result, err := scanGroup(row)
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) && pqErr.Code == "23505" {
+		return domain.Group{}, domain.ErrGroupConflict
+	}
 	if err != nil {
 		return domain.Group{}, err
 	}
